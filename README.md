@@ -6,6 +6,7 @@ As someone who is competent around cloud infrastructure, I decided to design a f
  I decided to start thinking of what I would make my infrastructure look like as soon as possible, as a result I came up with a relatively inexpensive setup that would meet the criteria. But not all things are as simple as that. Later on I made multiple refinements to the layout of my infrastructure as part of the design process.
  
 Step 1 basic setup
+
 In any scenario, the function of the VPC (amazon virtual private cloud) is to enable you to start up services inside a private network. This network has similarities to traditional networks, but you get the added benefit of using AWS infrastructure, which has more security and scalability.
 We start with a blank canvas:
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/bd0b026a-3804-4acf-a2ba-cc87b2ec7459)
