@@ -1,5 +1,5 @@
 # aws documentation for POC
-A POC implementation of a network configuration assigned to me by a university
+A POC implementation of a network configuration capable of supporting a small university
 
 As someone who is competent around cloud infrastructure, I decided to design a functional web server that could fulfill the basic needs of a smaller university. I tasked myself with setting up a web server that could demonstrate to a university that currently employs physical infrastructure how moving to the cloud could save time and costs. The requirements that I used were a web application, a functional cloud computer, and following the AWS well-architected framework, this includes making the web application functional, load balanced, scalable, highly available, cost optimized, and high performing.
 
