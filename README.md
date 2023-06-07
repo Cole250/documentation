@@ -7,12 +7,14 @@ As someone who is competent around cloud infrastructure, I decided to design a f
  
 Step 1 basic setup
 
-In any scenario, the function of the VPC (amazon virtual private cloud) is to enable you to start up services inside a private network. This network has similarities to traditional networks, but you get the added benefit of using AWS infrastructure, which has more security and scalability.
-We start with a blank canvas:
+In any scenario, the function of the VPC (amazon virtual private cloud) is to enable you to start up services inside a private network. This network has similarities to traditional networks, but everyone gets the added benefit of using AWS infrastructure, which has more security and scalability.
+It all starts with a blank canvas
+:
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/bd0b026a-3804-4acf-a2ba-cc87b2ec7459)
 
-This is a representation of the cloud, inside it can fit any service AWS has to offer. But for now we are going to build the network, the first step we take is creating a VPC.
--	 In the service navigation area of the aws console we type VPC in the search bar clicking on the first option. We can now click on the option “create a VPC”, we now move into the setup process. Make sure the “VPC and more” option is selected before continuing, the auto generate option too needs to be selected right underneath it, but you should change the name underneath it from project to a name of your choice. Next, the ipv4 CIDR block, the easiest set to work with right now is 10.0.0.0/16, this is your network right now:
+This is a representation of the cloud, inside it can fit any service AWS has to offer. But for now I am  going to build the network, the first step I took is creating a VPC.
+-	 In the service navigation area of the aws console,. After typing VPC in the search bar, and clicking on the first option. I now have the ability to click on the option “create a VPC”. Now in the setup process. I need to make sure the “VPC and more” option is selected before continuing, the auto generate option too needs to be selected right underneath it, but it’s important to choose something memorable. Next, the ipv4 CIDR block, the easiest set to work with right now is 10.0.0.0/16.
+This is my Cloud right now:
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/6392d59c-196b-4fc1-b4d6-8c77e32b2e82)
 -	Choose the number of availability zones as 1, the number of public subnets as 1, and the number of private subnets as 1 for now, close to beneath the choice for the number of private subnets is a drop down to “customize subnets CIDR blocks”, after opening it change Public subnet CIDR block in us-east-1a to 10.0.0.0/24, and change Private subnet CIDR block in us-east-1a to 10.0.1.0/24. Last, choose NAT gateways in 1 AZ, set VPC endpoint to none, and keep both DNS hostnames and DNS resolution enabled. After verifying the settings in the preview panel on the right, you can press Create VPC.
 This was my current configuration:
