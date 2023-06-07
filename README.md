@@ -38,77 +38,60 @@ Now that I have my network frame, I can add services, there are many to choose f
 
 
 #!/bin/bash -xe
-
 apt update -y
-
 apt install nodejs unzip wget npm mysql-server -y
-
 #wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-200-ACCAP1-1-DEV/code.zip -P /home/ubuntu
-
 wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-200-ACCAP1-1-79581/1-lab-capstone-project-1/code.zip -P 
-
-/home/ubuntu
-
-cd /home/ubuntu
-
+/home/ubuntucd /home/ubuntu
 unzip code.zip -x "resources/codebase_partner/node_modules/*"
-
 cd resources/codebase_partner
-
 npm install aws aws-sdk
-
 mysql -u root -e "CREATE USER 'nodeapp' IDENTIFIED WITH mysql_native_password BY 'student12'";
-
 mysql -u root -e "GRANT all privileges on *.* to 'nodeapp'@'%';"
-
 mysql -u root -e "CREATE DATABASE STUDENTS;"
-
 mysql -u root -e "USE STUDENTS; CREATE TABLE students(
-
 id INT NOT NULL AUTO_INCREMENT,
-
 name VARCHAR(255) NOT NULL,
-
 address VARCHAR(255) NOT NULL,
-
 city VARCHAR(255) NOT NULL,
-
 state VARCHAR(255) NOT NULL,
-
 email VARCHAR(255) NOT NULL,
-
 phone VARCHAR(100) NOT NULL,
-
 PRIMARY KEY ( id ));"
-
 sed -i 's/.*bind-address.*/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
-
 systemctl enable mysql
-
 service mysql restart
-
 export APP_DB_HOST=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-
 export APP_DB_USER=nodeapp
-
 export APP_DB_PASSWORD=student12
-
 export APP_DB_NAME=STUDENTS
-
 export APP_PORT=80
-
 npm start &
-
 echo '#!/bin/bash -xe
-
 cd /home/ubuntu/resources/codebase_partner
-
 export APP_PORT=80
-
 npm start' > /etc/rc.local
-
 chmod +x /etc/rc.local
 
 -	 (This user data is reused and not anything that should be used officially, its main purpose is to show that the web application is not smoke and mirrors)
 -	The configurations are reviewed, and I click the orange “launch instance button”. After a few minutes, both checks are passed and my application is accessible, my configuration now looks like this:
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/7ba58752-1d49-4fbe-aa06-52b5426715ba)
+
+Step 3 load balancing ready
+
+In this part I start the process of making the web server highly available, which includes a load balancing service (when there are multiple EC2 instances it moves web requests between them), and an auto scaling service (starts up new EC2 instances when there is too much load on the current instances). These will allow people trying to view my website to not notice a difference even if it is under high load. 
+-	The first thing I can do to begin setting up for an auto scaling group Is create an AMI (Amazon Machine Image), A machine image is a snapshot of an EC2 instance you have already created, making it easier to start up more instances faster or allowing an auto scaling group to start up instances how you want. While I am still in “instances” part the EC2 console, I select the instance I created and click “actions”, close to the bottom of the drop down is another dropdown labeled “Image and templates” and create image is what I finally select. I make the image name “ServerAMI” and the description “AMI for university web server”, then I finally press the orange button “create image”.
+
+While it would be easy to make multiple EC2 instances and call it good, it would not make the application highly available, because people would have to navigate to a different URL to access the same thing. However the application load balancer uses one URL and communicates between multiple instances.
+-	To start configuring the load balancer, I navigated to the load balancing section of the left navigation pane, and clicked on target groups. Next in basic configuration, I choose instances, name it “Projectgroup”, select the project VPC, and click on the orange “next” button. Last thing to do is double check the configuration and click the orange “create target group”. Looking back at the left navigation I click on load balancers, afterwards I click on “create load balancer” and choose the application load balancer. I make the name “project ELB”, select the VPC I created, two availability zones (the ones that hold both public subnets), and both public subnets in each availability zone. I choose the “web security group” that I created in the first step for the security group, next, in listeners and routing I use the HTTP protocol with port 80 and have it forward to the “projectgroup” that I just made.
+
+The last part of making the web server highly available is to create a launch configuration and an auto scaling group. Launch configurations give auto scaling groups more instructions on what to do when it needs to scale, like the AMI, the instance type, key pair, etc. However, recently AWS has begun to migrate from launch configurations to “launch templates” which is very similar but has a few extra options.
+
+-	In the auto scaling groups option in the left navigation pane of the EC2 console, Near the orange “create auto scaling group” Is a white button “Launch configurations”. After clicking on it I am taken to the launch configurations page and click the orange “create launch configuration”. I name it “project configuration”, choose the AMI from the beginning of this step, choose a t.2 micro instance, then in additional configuration in the small “monitoring” section, I “enable EC2 instance detailed monitoring with cloud watch”, select web security group under security groups, and lastly choose vockey or the key pair I already created with my first EC2 instance. I finish creating the launch configuration with the orange button,  still in the launch configurations page, I select the launch configuration I just made and click “actions” and then “create auto scaling group”.
+-	Now in the auto scaling group configuration, I do the following. I name it “Project auto scaling group” and click the orange “next”, I select the VPC I made, and both private subnets in “availability zones and subnets”, then I click the “next” button, next is the load balancer. First I “attach to an existing load balancer” and “choose from load balancer target groups”, this is where the target group I just created comes in (I select “projectgroup”). After scrolling down to the bottom and selecting “enable group metrics collection within cloudwatch” I click the orange “next”, I am now in the “configure group size and scaling policies” (step 4), I chose desired capacity: 1, minimum capacity: 1, maximum capacity: 2, capacity in this reference is how many instances will be deployed. In scaling policies I choose “target tracking scaling policy so i can configure one, I name it “projectscalingpolicy”, the metric is average cpu utilization, and the target value is 70, this will instruct the auto scaling group to add another instance when the first web server is under high load, and remove instances when nothing has been going on for long enough. Finally I press the orange next button and press the button again, because notifications would be for a real application of this documentation, and they would keep me aware of any scaling that goes on. In step six, I click add tag, I make the key “name” and the value “university instance, after clicking the orange “next button which takes me to review, I scroll to the bottom and click “create auto scaling group”
+This is my current configuration:
+![unnamed](https://github.com/Cole250/documentation/assets/133917569/a0259ff3-f5bf-4328-9ed7-3cc3f8b65d65)
+
+Refinements
+
+
