@@ -8,6 +8,7 @@ As someone competent in cloud infrastructure, I decided to design a functional w
 
 The cost of the infrastructure I would implement can be visualized with the AWS pricing calculator
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/c23f01a8-885d-4aa5-9a6e-ea3d9e446898)
+
 The infrastructure implemented were two t.2 micro instances, in the use case of a university, they would have peak hours, and be used for about a year before analysis is run for if they would stick to a hybrid or full cloud model.
 
 
