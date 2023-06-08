@@ -91,7 +91,25 @@ The last part of making the web server highly available is to create a launch co
 -	Now in the auto scaling group configuration, I do the following. I name it “Project auto scaling group” and click the orange “next”, I select the VPC I made, and both private subnets in “availability zones and subnets”, then I click the “next” button, next is the load balancer. First I “attach to an existing load balancer” and “choose from load balancer target groups”, this is where the target group I just created comes in (I select “projectgroup”). After scrolling down to the bottom and selecting “enable group metrics collection within cloudwatch” I click the orange “next”, I am now in the “configure group size and scaling policies” (step 4), I chose desired capacity: 1, minimum capacity: 1, maximum capacity: 2, capacity in this reference is how many instances will be deployed. In scaling policies I choose “target tracking scaling policy so i can configure one, I name it “projectscalingpolicy”, the metric is average cpu utilization, and the target value is 70, this will instruct the auto scaling group to add another instance when the first web server is under high load, and remove instances when nothing has been going on for long enough. Finally I press the orange next button and press the button again, because notifications would be for a real application of this documentation, and they would keep me aware of any scaling that goes on. In step six, I click add tag, I make the key “name” and the value “university instance, after clicking the orange “next button which takes me to review, I scroll to the bottom and click “create auto scaling group”
 This is my current configuration:
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/a0259ff3-f5bf-4328-9ed7-3cc3f8b65d65)
+A SIDE NOTE:
+Once I have my auto scaling group operational, I terminate the instance I made at the beginning, by going to the instances section in the EC2 console, selecting the instance, clicking actions and then “terminate instance”, it only takes a few minutes for this to finish.
 
-Refinements
+
+Refinements and test runs
+
+Load testing is the most important step to me, would an inventor not test their own creation?
+
+there are quite a few ways to load test an auto scaling web server, and aws has the right tools to do so making it easier to not cross platform.
+-	
+The first thing I do is navigate to cloud9 in the search bar, now in the cloud9 console, I choose the orange “create environment”and enter into configuration. I set the name as “loadtest”, environment type as a “new EC2 instance”, the instance will be a t.2 micro, in network settings I choose the connection as “secure shell (SSH), and click the orange “create” button. After the environment is created I select it and choose “open in cloud9”, which will navigate me to the console, I need to install a load testing application in order to put stress on my instances, to install I type 
+“npm install -g loadtest”
+ once the command has finished, I run
+ “loadtest --rps 2000 -c 1000 -k http://<LoadBalancerDNS>”	(the DNS of the application load balancer goes at the end)
+I also have the option to increase the rps (web requests per second) and c (connections) like this 
+ “loadtest --rps 8000 -c 4000 -k http://<LoadBalancerDNS>”
+From this point on the console updates frequently, and I need to wait up to 7 minutes before the load balancer updates with enough data to initiate a new instance, in the cloud9 console I press ctrl+c to end the command.
+
+By load testing my infrastructure, I found out that my dynamic scaling policy (what I was supposed to set earlier to tell the load balancer when it needs more instances) had stopped existing, it’s important to find flaws like this instead of them happening at a bad time, load testing my architecture was very helpful in this regard.
+
 
 
