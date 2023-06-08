@@ -37,41 +37,41 @@ Now that I have my network frame, I can add services, there are many to choose f
 -	Next to network settings, choose edit, then I change the VPC to the one that was created in the beginning. For the subnet, I use the second public subnet I created, which will remove the possibility that there is something wrong with the private subnets so I can troubleshoot what could go wrong with my instance. Auto-assign public ip stays on, and I now choose the security group I created at the end of step 1 basic setup. After scrolling to “advanced details” and expanding it, I then scrolled to the user data box, and put in basic user data to set up the server, it looks like this:
 
 
-#!/bin/bash -xe
-apt update -y
-apt install nodejs unzip wget npm mysql-server -y
-#wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-200-ACCAP1-1-DEV/code.zip -P /home/ubuntu
-wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-200-ACCAP1-1-79581/1-lab-capstone-project-1/code.zip -P 
-/home/ubuntucd /home/ubuntu
-unzip code.zip -x "resources/codebase_partner/node_modules/*"
-cd resources/codebase_partner
-npm install aws aws-sdk
-mysql -u root -e "CREATE USER 'nodeapp' IDENTIFIED WITH mysql_native_password BY 'student12'";
-mysql -u root -e "GRANT all privileges on *.* to 'nodeapp'@'%';"
-mysql -u root -e "CREATE DATABASE STUDENTS;"
-mysql -u root -e "USE STUDENTS; CREATE TABLE students(
-id INT NOT NULL AUTO_INCREMENT,
-name VARCHAR(255) NOT NULL,
-address VARCHAR(255) NOT NULL,
-city VARCHAR(255) NOT NULL,
-state VARCHAR(255) NOT NULL,
-email VARCHAR(255) NOT NULL,
-phone VARCHAR(100) NOT NULL,
-PRIMARY KEY ( id ));"
-sed -i 's/.*bind-address.*/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
-systemctl enable mysql
-service mysql restart
-export APP_DB_HOST=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-export APP_DB_USER=nodeapp
-export APP_DB_PASSWORD=student12
-export APP_DB_NAME=STUDENTS
-export APP_PORT=80
-npm start &
-echo '#!/bin/bash -xe
-cd /home/ubuntu/resources/codebase_partner
-export APP_PORT=80
-npm start' > /etc/rc.local
-chmod +x /etc/rc.local
+- #!/bin/bash -xe
+- apt update -y
+- apt install nodejs unzip wget npm mysql-server -y
+- #wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-200-ACCAP1-1-DEV/code.zip -P /home/ubuntu
+- wget https://aws-tc-largeobjects.s3.us-west-2.amazonaws.com/CUR-TF-200-ACCAP1-1-79581/1-lab-capstone-project-1/code.zip -P 
+- /home/ubuntucd /home/ubuntu
+- unzip code.zip -x "resources/codebase_partner/node_modules/*"
+- cd resources/codebase_partner
+- npm install aws aws-sdk
+- mysql -u root -e "CREATE USER 'nodeapp' IDENTIFIED WITH mysql_native_password BY 'student12'";
+- mysql -u root -e "GRANT all privileges on *.* to 'nodeapp'@'%';"
+- mysql -u root -e "CREATE DATABASE STUDENTS;"
+- mysql -u root -e "USE STUDENTS; CREATE TABLE students(
+- id INT NOT NULL AUTO_INCREMENT,
+- name VARCHAR(255) NOT NULL,
+- address VARCHAR(255) NOT NULL,
+- city VARCHAR(255) NOT NULL,
+- state VARCHAR(255) NOT NULL,
+- email VARCHAR(255) NOT NULL,
+- phone VARCHAR(100) NOT NULL,
+- PRIMARY KEY ( id ));"
+- sed -i 's/.*bind-address.*/bind-address = 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+- systemctl enable mysql
+- service mysql restart
+- export APP_DB_HOST=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+- export APP_DB_USER=nodeapp
+- export APP_DB_PASSWORD=student12
+- export APP_DB_NAME=STUDENTS
+- export APP_PORT=80
+- npm start &
+- echo '#!/bin/bash -xe
+- cd /home/ubuntu/resources/codebase_partner
+- export APP_PORT=80
+- npm start' > /etc/rc.local
+- chmod +x /etc/rc.local
 
 -	 (This user data is reused and not anything that should be used officially, its main purpose is to show that the web application is not smoke and mirrors)
 -	The configurations are reviewed, and I click the orange “launch instance button”. After a few minutes, both checks are passed and my application is accessible, my configuration now looks like this:
