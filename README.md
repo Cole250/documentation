@@ -98,10 +98,8 @@ Once I have my auto scaling group operational, I terminate the instance I made a
 Refinements and test runs
 
 Load testing is the most important step to me, would an inventor not test their own creation?
-
 there are quite a few ways to load test an auto scaling web server, and aws has the right tools to do so making it easier to not cross platform.
--	
-The first thing I do is navigate to cloud9 in the search bar, now in the cloud9 console, I choose the orange “create environment”and enter into configuration. I set the name as “loadtest”, environment type as a “new EC2 instance”, the instance will be a t.2 micro, in network settings I choose the connection as “secure shell (SSH), and click the orange “create” button. After the environment is created I select it and choose “open in cloud9”, which will navigate me to the console, I need to install a load testing application in order to put stress on my instances, to install I type 
+- The first thing I do is navigate to cloud9 in the search bar, now in the cloud9 console, I choose the orange “create environment”and enter into configuration. I set the name as “loadtest”, environment type as a “new EC2 instance”, the instance will be a t.2 micro, in network settings I choose the connection as “secure shell (SSH), and click the orange “create” button. After the environment is created I select it and choose “open in cloud9”, which will navigate me to the console, I need to install a load testing application in order to put stress on my instances, to install I type 
 “npm install -g loadtest”
  once the command has finished, I run
  “loadtest --rps 2000 -c 1000 -k http://<LoadBalancerDNS>”	(the DNS of the application load balancer goes at the end)
