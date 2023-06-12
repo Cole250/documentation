@@ -113,4 +113,9 @@ I also have the option to increase the rps (web requests per second) and c (conn
  “loadtest --rps 8000 -c 4000 -k http://<LoadBalancerDNS>”
 From this point on the console updates frequently, and I need to wait up to 7 minutes before the load balancer updates with enough data to initiate a new instance, in the cloud9 console I press ctrl+c to end the command.
 
+ This is an example of what it looks in the ec2 console after the auto scaling process completes
+ ![Screenshot 2023-06-12 133425](https://github.com/Cole250/documentation/assets/133917569/248a5d2b-621a-4029-8d62-0112b08111e5)
+
+ And this is the 
+ 
 By load testing my infrastructure, I found out that my dynamic scaling policy (what I was supposed to set earlier to tell the load balancer when it needs more instances) had stopped existing, it’s important to find flaws like this instead of them happening at a bad time, load testing my architecture was very helpful in this regard.
