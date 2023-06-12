@@ -113,7 +113,7 @@ I also have the option to increase the rps (web requests per second) and c (conn
  “loadtest --rps 8000 -c 4000 -k http://<LoadBalancerDNS>”
 From this point on the console updates frequently, and I need to wait up to 7 minutes before the load balancer updates with enough data to initiate a new instance, in the cloud9 console I press ctrl+c to end the command.
 
- This is an example of what it looks in the ec2 console after the auto scaling process completes, earlier, apporximately 10 minutes ealier, the only running instances were the cloud9 console and the singular university instance, afterward, two more instances were added as per the max instances the auto scaling group is allowed to initialize.
+ This is an example of what it looks in the ec2 console after the auto scaling process completes, earlier, apporximately 10 minutes ealier, the only running instances were the cloud9 console and the singular university instance, after I used the cloud9 console to put a load on the application load balancer, two more instances were added as per the max instances the auto scaling group is allowed to initialize.
 ![Screenshot 2023-06-12 134316](https://github.com/Cole250/documentation/assets/133917569/8dab9a18-15b1-4db0-8594-cfe5b1f22f4b)
 
  This is the auto scaling group activity that initialized all three instances.
