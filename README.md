@@ -1,4 +1,4 @@
-# aws documentation for POC
+# AWS documentation for POC
 A POC implementation of a network configuration capable of supporting a small university
 
 As someone competent in cloud infrastructure, I decided to design a functional web server that could fulfill the basic needs of a smaller university. I tasked myself with setting up a web server that could demonstrate to a university that currently employs physical infrastructure how moving to the cloud could save time and costs. The requirements that I used were a web application, a functional cloud computer, and following the AWS well-architected framework, this includes making the web application functional, load balanced, scalable, highly available, cost-optimized, and high performing.
@@ -35,7 +35,7 @@ This is now your current configuration:
 - The last step in the network configuration process is to make a quick web security group that will act like a firewall to enable web requests. The first step is to navigate to “security groups” in the left pane, then choose the orange “create security group”. The name I chose will be “Web security group”, the description is “Enable HTTP access”. It’s important here to make sure that the correct VPC is selected again, next, I add an inbound rule, the type is HTTP, the source is “anywhere-IPv4”, and the description is “permit web requests”
 
 
-Step 2 web server ready
+Step 2 Web Server Ready
 
 Now that I have my network frame, I can add services, there are many to choose from, but they stray from my criteria. I will be setting up an EC2 (Elastic compute cloud) instance. Like the function of a normal web server, an EC2 instance is a virtual server, which consists of the average server components, a processor, RAM, storage, and other customizable features. The best part about operating a virtual server is that it has multiple payment options, which includes its staple in price optimization, the pay-as-you-go feature, this choice only charges you for what you use, not the infrastructure itself.
 -	To set up an instance, I navigate away from the VPC console by typing EC2 in the search bar and clicking on EC2. The orange button labeled “launch instance” is what I click next to enter the setup process for an EC2 instance.
@@ -83,7 +83,7 @@ Now that I have my network frame, I can add services, there are many to choose f
 -	The configurations are reviewed, and I click the orange “launch instance button”. After a few minutes, both checks are passed and my application is accessible, my configuration now looks like this:
 ![unnamed](https://github.com/Cole250/documentation/assets/133917569/7ba58752-1d49-4fbe-aa06-52b5426715ba)
 
-Step 3 Load balancing ready
+Step 3 Load Balancing Ready
 
 In this part, I start the process of making the web server highly available, which includes a load balancing service (when there are multiple EC2 instances it moves web requests between them), and an auto-scaling service (starts up new EC2 instances when there is too much load on the current instances). These will allow people trying to view my website to not notice a difference even if it is under high load. 
 -	The first thing I can do to begin setting up for an auto-scaling group Is create an AMI (Amazon Machine Image), A machine image is a snapshot of an EC2 instance you have already created, making it easier to start up more instances faster or allowing an auto-scaling group to start up instances how you want. While I am still in the “instances” part of the EC2 console, I select the instance I created and click “actions”, close to the bottom of the drop-down is another dropdown labeled “Image and templates” and create image is what I finally select. I make the image name “ServerAMI” and the description “AMI for university web server”, then I finally press the orange button “create image”.
@@ -101,7 +101,7 @@ A SIDE NOTE:
 Once I have my auto-scaling group operational, I terminate the instance I made at the beginning, by going to the Instances section in the EC2 console, selecting the instance, clicking actions, and then “terminate instance”, it only takes a few minutes for this to finish.
 
 
-Refinements and test runs
+Refinements And Test Runs
 
 Load testing is the most important step to me, would an inventor not test their own creation?
 there are quite a few ways to load test an auto-scaling web server, and AWS has the right tools to do so making it easier to not cross-platform.
